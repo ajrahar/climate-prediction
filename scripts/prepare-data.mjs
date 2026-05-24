@@ -346,6 +346,17 @@ if (!fs.existsSync(CLIMATE)) {
   process.exit(0);
 }
 
+function copyPredictions() {
+  const src = path.join(CLIMATE, "predictions.json");
+  const dst = path.join(OUT, "predictions.json");
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, dst);
+    console.log("✅ predictions.json disalin ke public/data/");
+  } else {
+    console.log("⚠️  predictions.json tidak ditemukan di climate_we/ — jalankan export_predictions.py terlebih dahulu");
+  }
+}
+
 fs.mkdirSync(OUT, { recursive: true });
 
 const cityRows = {};
@@ -393,3 +404,5 @@ const payload = {
 
 fs.writeFileSync(path.join(OUT, "dashboard.json"), JSON.stringify(payload, null, 2));
 console.log("✅ Data disimpan ke public/data/dashboard.json");
+
+copyPredictions();

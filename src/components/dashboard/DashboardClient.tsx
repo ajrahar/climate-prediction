@@ -28,6 +28,7 @@ import {
 import type { CityName, DashboardData } from "@/lib/types";
 import { CITY_NAMES, SPLITS } from "@/lib/constants";
 import JavaMap from "@/components/JavaMap";
+import PredictionChart from "@/components/dashboard/PredictionChart";
 
 interface Props {
   data: DashboardData;
@@ -215,8 +216,16 @@ export default function DashboardClient({ data }: Props) {
         </ChartCard>
       </div>
 
-      <div className="mb-6 grid gap-6 lg:grid-cols-3">
-        <ChartCard title="RMSE per Split" subtitle={selectedCity}>
+      {/* Visualisasi Aktual vs Prediksi */}
+      <div className="mb-6">
+        <PredictionChart
+          selectedCity={selectedCity}
+          selectedSplit={selectedSplit}
+          cityColor={city.color}
+        />
+      </div>
+
+      <div className="mb-6 grid gap-6 lg:grid-cols-3">        <ChartCard title="RMSE per Split" subtitle={selectedCity}>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={splitTrend}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
