@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import type { CityName, DashboardData } from "@/lib/types";
 import { CITY_NAMES, SPLITS } from "@/lib/constants";
+import JavaMap from "@/components/JavaMap";
 
 interface Props {
   data: DashboardData;
@@ -132,6 +133,17 @@ export default function DashboardClient({ data }: Props) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Peta Pulau Jawa — auto-select sesuai kota yang dipilih */}
+      <div className="mb-8">
+        <JavaMap
+          cities={data.cities}
+          activeCity={selectedCity}
+          onCityChange={setSelectedCity}
+          showLegend
+          linkToKota
+        />
       </div>
 
       {currentMetric && (

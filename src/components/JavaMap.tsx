@@ -19,6 +19,10 @@ interface Props {
   linkToKota?: boolean;
   className?: string;
   cities?: Record<CityName, CityInfo>;
+  /** Controlled: kota yang sedang aktif (dari luar) */
+  activeCity?: CityName | null;
+  /** Controlled: callback saat user klik marker */
+  onCityChange?: (city: CityName) => void;
 }
 
 export default function JavaMap({
@@ -26,8 +30,30 @@ export default function JavaMap({
   linkToKota = false,
   className = "",
   cities,
+  activeCity,
+  onCityChange,
 }: Props) {
-  const [active, setActive] = useState<string | null>(null);
+  // Jika activeCity diberikan dari luar, gunakan controlled mode
+  const isControlled = activeCity !== undefined;
+  const [internalActive, setInternalActive] = useState<string | null>(null);
+
+  const active = isControlled ? activeCity : internalActive;
+
+  function handleClick(name: CityName) {
+    if (isControlled) {
+      onCityChange?.(name);
+    } else {
+      setInternalActive(name);
+    }
+  }
+
+  function handleMouseEnter(name: CityName) {
+    if (!isControlled) setInternalActive(name);
+  }
+
+  function handleMouseLeave() {
+    if (!isControlled) setInternalActive(null);
+  }
 
   return (
     <div className={`glass rounded-2xl p-5 ${className}`}>
@@ -56,9 +82,9 @@ export default function JavaMap({
                 key={city.name}
                 longitude={city.lon}
                 latitude={city.lat}
-                onClick={() => setActive(city.name)}
-                onMouseEnter={() => setActive(city.name)}
-                onMouseLeave={() => setActive(null)}
+                onClick={() => handleClick(city.name)}
+                onMouseEnter={() => handleMouseEnter(city.name)}
+                onMouseLeave={handleMouseLeave}
               >
                 <MarkerContent>
                   <div
