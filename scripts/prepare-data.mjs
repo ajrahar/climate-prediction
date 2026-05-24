@@ -340,6 +340,12 @@ function readValLoss() {
   return result;
 }
 
+// Skip if source data folder doesn't exist (e.g. in Vercel CI environment)
+if (!fs.existsSync(CLIMATE)) {
+  console.log("⚠️  climate_we folder not found, skipping data preparation (using existing dashboard.json)");
+  process.exit(0);
+}
+
 fs.mkdirSync(OUT, { recursive: true });
 
 const cityRows = {};
